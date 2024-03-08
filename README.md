@@ -27,7 +27,7 @@
     <li>basic knowledge of git</li>
   </ul>
   <li><b>Steps</b></li>
-  <h5><b>In the Master Server</b></h5>
+  <h5><b>A. In the Master Server</b></h5>
   <ul type="square">
     <li>Update the server</li>
     <pre><code>sudo yum update</code></pre>
@@ -74,6 +74,59 @@
     <pre><code>sudo systemctl enable puppetserver</code></pre>
     <br>
     <img src="start puppetserver.png" alt="start puppetserver">
+  </ul>
+  <h5><b>B. In the Slave Server (Client Node)</b></h5>
+  <i>Note : do the following steps in each of your client nodes (slave servers)</i>
+  <br><br>
+  <ul type="square">
+    <li>Add the master private ip address in the slave host configuration file</li>
+    <i>Open the configuration file with nano and add the following line at the end of the file<br>
+      your_master_private_ip_address puppet puppet-master
+    </i>
+    <pre><code>sudo nano /etc/hosts</code></pre>
+    <br>
+    <img src="pngchange host.png" alt="change host">
+    <br>
+    <i>Tape Ctr + O, Enter, Ctr + x to save and quit</i>
+    <br>
+    <li>Download Puppet labs</li>
+    <br>
+    <pre><code>sudo rpm -Uvh https://yum.puppet.com/puppet6-release-el-7.noarch.rpm</code></pre>
+    <br>
+    <img src="dowload puppetlabs result.png" alt="dowload puppetlabs result.png">
+    <br>
+    <li>Install puppet agent</li>
+    <br>
+    <pre><code>sudo yum install -y puppet-agent</code></pre>
+    <br>
+    <img src="install agent.png" alt="install agent">
+    <li>Start puppet-agent</li>
+    <br>
+     <pre><code>sudo /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true</code></pre>
+    <br>
+    <img src="start puppetagent.png" alt="start puppetagent">
+    <br>
+    <h5><b>C. In the Master Server</b></h5>
+    <li>Display the list of received certificates</li>
+    <pre><code>sudo /opt/puppetlabs/server/bin/puppetserver ca list --all</code></pre>
+    <br>
+    <img src="list of certificates.png" alt="list of certificates">
+  </ul>
+  <br>
+  <i>Note : Our master received two certificates because we have worked with two client nodes (slave instances)</i>
+  <br>
+  <br>
+  <li>D. Sign certificates</li>
+  <ul type="square">
+    <li>Sign the first client node certificate</li>
+    <pre><code>sudo /opt/puppetlabs/bin/puppetserver ca sign --certname your_first_client_node_hostname</code></pre>
+    <br>
+    <img src="sign1.png" alt="signing the first">
+<p>
+    <li>Sign the second client node certificate</li>
+    <pre><code>sudo /opt/puppetlabs/bin/puppetserver ca sign --certname your_second_client_node_hostname</code></pre>
+    <br>
+    <img src="sign2.png" alt="signing the second"></p>
   </ul>
   </ol>
 </div>
