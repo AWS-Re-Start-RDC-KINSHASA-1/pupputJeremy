@@ -29,8 +29,16 @@
   <li><b>Steps</b></li>
   <h5><b>In the Master Server</b></h5>
   <ul type="square">
-    <li>Rename the master hostname as puppet</li>
-    ~~~sudo hostnamectl set-hostname puppet~~~
+    <li>Update the server</li>
+    <pre><code>sudo yum update</code></pre>
+    <img src="update result.png" alt="the result of update">
+    <br>
+    <li>Rename the master hostname as puppet and review the new hostname</li>
+    <br>
+    <code><pre>sudo hostnamectl set-hostname puppet</pre></code>
+    <code><pre>hostname</pre></code>
+    
+    <img src="hostname result.png" alt="hostname change result">
   </ul>
   </ol>
 </div>
