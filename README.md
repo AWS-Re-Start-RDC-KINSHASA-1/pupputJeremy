@@ -35,10 +35,22 @@
     <br>
     <li>Rename the master hostname as puppet and review the new hostname</li>
     <br>
-    <code><pre>sudo hostnamectl set-hostname puppet</pre></code>
-    <code><pre>hostname</pre></code>
-    
-    <img src="hostname result.png" alt="hostname change result">
+    <pre><code>sudo hostnamectl set-hostname puppet</code></pre>
+    <pre><code>hostname</code></pre>
+    <p>
+      <img src="hostname result.png" alt="hostname change result">
+    </p>
+    <li>Stop any running firewall if neccessary and review the firewall status</li>
+    <pre><code>sudo systemctl stop firewalld</code></pre>
+    <pre><code>sudo systemctl status firewalld</code></pre>
+    <br>
+    <img src="firewalld status.png" alt="firewalld status">
+    <br>
+    <li>Download Puppet labs</li>
+    <br>
+    <pre><code>sudo rpm -Uvh https://yum.puppet.com/puppet6-release-el-7.noarch.rpm</code></pre>
+    <br>
+    <img src="dowload puppetlabs result.png" alt="dowload puppetlabs result.png>
   </ul>
   </ol>
 </div>
