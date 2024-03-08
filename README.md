@@ -50,7 +50,30 @@
     <br>
     <pre><code>sudo rpm -Uvh https://yum.puppet.com/puppet6-release-el-7.noarch.rpm</code></pre>
     <br>
-    <img src="dowload puppetlabs result.png" alt="dowload puppetlabs result.png>
+    <img src="dowload puppetlabs result.png" alt="dowload puppetlabs result.png">
+    <br>
+    <li>Install puppetserver</li>
+    <br>
+    <pre><code>sudo yum install puppetserver -y</code></pre>
+    <br>
+    <img src="puppetserver install result.png" alt="puppetserver install result">
+    <br>
+    <li>Configure puppetserver</li>
+    <i>Open the configuration file with nano and change the memory size from 2g to 512m on "JAVA-AGS"</i>
+    <br>
+    <br>
+    <pre><code>sudo nano /etc/sysconfig/puppetserver</code></pre>
+    <br>
+    <img src="configuration file.png" alt="configuration file">
+    <br>
+    <i>Press Ctr + O and Enter and Ctr + x to save and quit</i>
+    <br><br>
+    <li>Start and enable puppetserver</li>
+    <br>
+    <pre><code>sudo systemctl start puppetserver</code></pre>
+    <pre><code>sudo systemctl enable puppetserver</code></pre>
+    <br>
+    <img src="start puppetserver.png" alt="start puppetserver">
   </ul>
   </ol>
 </div>
