@@ -111,13 +111,12 @@
     <pre><code>sudo /opt/puppetlabs/server/bin/puppetserver ca list --all</code></pre>
     <br>
     <img src="list of certificates.png" alt="list of certificates">
-  </ul>
-  <br>
+    <br>
   <i>Note : Our master received two certificates because we have worked with two client nodes (slave instances)</i>
   <br>
   <br>
-  <li>D. Sign certificates</li>
-  <ul type="square">
+  <li>Sign certificates</li>
+  <ul>
     <li>Sign the first client node certificate</li>
     <pre><code>sudo /opt/puppetlabs/bin/puppetserver ca sign --certname your_first_client_node_hostname</code></pre>
     <br>
@@ -128,5 +127,13 @@
     <br>
     <img src="sign2.png" alt="signing the second"></p>
   </ul>
+  <li>Create a manifest file and check if the file was created</li>
+    <br>
+    <pre><code>sudo touch /etc/puppetlabs/code/environments/production/manifests/sample.pp</code></pre>
+    <pre><code>sudo ls /etc/puppetlabs/code/environments/production/manifests/sample.pp</code></pre>
+    <br>
+    <img src="manifest created.png"  alt="manifest created">
+  </ul>
+  
   </ol>
 </div>
