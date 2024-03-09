@@ -133,6 +133,79 @@
     <pre><code>sudo ls /etc/puppetlabs/code/environments/production/manifests/sample.pp</code></pre>
     <br>
     <img src="manifest created.png"  alt="manifest created">
+    <br>
+     <h5><b>D. In the Master Server, Write the configuration you expect to implement and maintain in your slave servers (client nodes)</b></h5>
+     <li>Open the manifest sample file with nano</li>
+     <br>
+     <pre><code>sudo nano /etc/puppetlabs/code/environments/production/manifests/sample.pp</code></pre>
+     <br>
+     <li>Paste the following instructions</li>
+     <pre><code>node 'your_slave1_hostname', 'your_slave2_hostname'
+{
+#Insure that httpd is installed
+package{ 'httpd' :
+ensure=> installed
+}
+file { '/etc/config':
+  ensure => 'directory',
+}
+#insure that there is an existing config.txt file
+file{
+'/etc/config/config.txt':
+ensure=>file
+}
+#Add an exec command to check for the presence of the file
+exec { 'check_config':
+  command => '/bin/test -f /etc/config/config.txt',
+  # We use 'onlyif' option to run this command only if config.txt file does not exist
+  onlyif  => '/bin/test ! -f /etc/config/config.txt',
+}
+#Install Python 3 if not already installed
+package { 'python3':
+  ensure => installed,
+}
+
+#Add an exec command to check the installed version of Python
+exec { 'check_python_version':
+  command     => '/usr/bin/python3 --version',
+  #We use the 'unless' option to run this command only if Python 3 is not installed
+  unless      => '/usr/bin/python3 --version',
+  logoutput   => true, # Afficher la sortie de la commande dans les logs Puppet
+}
+#Install Flask with pip if it is not already installed
+package { 'flask':
+  ensure   => 'installed',
+  provider => 'pip3',
+  require  => Package['python3'], # Assurez-vous que Python 3 est installé avant d'installer Flask
+}
+
+#Add an exec command to check if Flask is installed
+exec { 'check_flask':
+  command     => '/usr/bin/pip3 show flask',
+  logoutput   => true, # Afficher la sortie de la commande dans les logs Puppet
+  unless      => '/usr/bin/pip3 show flask', # Exécuter cette commande uniquement si Flask n'est pas déjà installé
+}
+#Install Git if it is not already installed
+package { 'git':
+  ensure => 'installed',
+}
+
+#Add an exec command to check if Git is installed
+exec { 'check_git':
+  command     => '/usr/bin/git --version',
+  logoutput   => true, # Afficher la sortie de la commande dans les logs Puppet
+  unless      => '/usr/bin/git --version', # Exécuter cette commande uniquement si Git n'est pas déjà installé
+}
+
+}</code></pre>
+<br>
+<i>Note replace your_slave1_hostname and your_slave2_hostname in the above instructions  by your slave servers hostnames, tape the following command in your slave servers to get their hostnames</i>
+
+<br>
+<pre><code>hostname</code></pre>
+<br>
+<img src="hostname result2.png" alt="hostname result.png">
+    
   </ul>
   
   </ol>
