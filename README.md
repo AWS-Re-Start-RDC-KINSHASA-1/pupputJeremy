@@ -205,8 +205,12 @@ exec { 'check_git':
 <pre><code>hostname</code></pre>
 <br>
 <img src="hostname result2.png" alt="hostname result.png">
-    
+
   </ul>
-  
+<li><b>Running the slaves catalogs</b></li>
+<h5><b>A. Create a scripth.sh file in the Slave Servers /home directory</b></h5>
+<i>Give the execution permission to the it</i>
+<pre><code>sudo touch script.sh</code></pre>
+<pre><code>sudo chmod u+x script.sh</code></pre>
   </ol>
 </div>
