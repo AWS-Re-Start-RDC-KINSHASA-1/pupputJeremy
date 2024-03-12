@@ -16,12 +16,13 @@
     <b>How does puppet work ?</b>
     </h4>
     <p>Puppet is based on a master-slave communication system. There is therefore a Master server and one or more slave servers linked to it. The master contains a module which in turn contains a manifest, a template and static files which can be downloaded by the slave servers  and the slaves servers contain each an agent and a factor.</p>
-    <p>The Slave servers sends a SSL certificate t the master to ask for a secure connection, the master responds by sinning the certificate, once the slave server (client node) is aware that the master has signed the certificate his factor analyses it's current state (configurations and installed software informations) and these informations will be sent the master as facts and any of thoses facts will be compared to the desired state specified in Puppet manifests on the Puppet Master server. If there is a difference between them the missing elements will be installed, created or started</p>
+    <p>The Slave servers sends a SSL certificate to the master to ask for a secure connection, the master responds by sinning the certificate, once the slave server (client node) is aware that the master has signed the certificate his factor analyses it's current state (configurations and installed software informations) and these informations will be sent the to master as facts and any of thoses facts will be compared to the desired state specified in Puppet manifests on the Puppet Master server. If there is a difference between them the missing elements will be installed, created or started</p>
   
   </li>
   <li><b>Prerequisites</b></li>
   <ul type="square">
     <li>3 Amazon Linux 2 EC2 instances (CentOS 7)</li>
+    <li>Allow inbound traffic for SSH (port:22), HTTP (port: 80) and TCP (port:5000) </li>
     <li>basic knowledge of linux</li>
     <li>basic knowledge of Ruby</li>
     <li>basic knowledge of git</li>
@@ -208,9 +209,74 @@ exec { 'check_git':
 
   </ul>
 <li><b>Running the slaves catalogs</b></li>
-<h5><b>A. Create a scripth.sh file in the Slave Servers /home directory</b></h5>
-<i>Give the execution permission to the it</i>
-<pre><code>sudo touch script.sh</code></pre>
-<pre><code>sudo chmod u+x script.sh</code></pre>
+<h5><b>A. Create a scripth.sh file in the Slave Servers home directory</b></h5>
+<i>Note : Do the following steps in each of your slave servers</i>
+<ul type="square">
+  <li>
+    create a script.sh file
+  </li>
+  <pre><code>sudo touch script.sh</code></pre>
+<li>Give the execution permission to the it</li>
+<pre><code>sudo chmod 777 script.sh</code></pre>
+<br>
+<img src="permission.png" alt="permission">
+<br>
+<li>Open the script.sh file and paste the following instructions</li>
+<pre><code>sudo nano script.sh</code></pre>
+<i>paste the following instructions</i>
+<pre><code>#!/bin/bash
+sudo /opt/puppetlabs/bin/puppet agent  --test
+  
+#Chemin local de votre application
+APPLICATION_PATH="/home/Tp1LoginJeremy"
+
+#URL du dépôt GitHub
+GITHUB_REPO="https://github.com/AWS-Re-Start-RDC-KINSHASA-1/Tp1LoginJeremy.git"
+
+#Vérifier si le répertoire de l'application existe
+if [ -d "$APPLICATION_PATH" ]; then
+    echo "Le répertoire de l'application existe. Effectuer un pull depuis GitHub..."
+    cd "$APPLICATION_PATH" || exit
+    sudo git pull origin main
+else
+    echo "Le répertoire de l'application n'existe pas. Cloner depuis GitHub..."
+   sudo  git clone "$GITHUB_REPO" "$APPLICATION_PATH"
+fi
+
+#Chemin vers votre application Flask
+
+APPLICATION_PATH="/home/Tp1LoginJeremy/app.py"
+
+#Vérifier si l'application Flask est déjà en cours d'exécution
+if pgrep -f "$APPLICATION_PATH" > /dev/null; then
+    echo "L'application Flask est déjà en cours d'exécution."
+    exit 1
+fi
+
+#Démarrer l'application Flask en arrière-plan avec nohup
+nohup python3 "$APPLICATION_PATH" &</code></pre>
+<p>
+  <h5><b>B. execute your script.sh file with a crontab</b></h5>
+  <li>Edit your crontab</li>
+  <pre><code>crontab -e</code></pre>
+  <li>Paste the following instruction to execute your script.sh file every minute with a crontab</li>
+  <pre><code>* * * * * /home/ec2-user/script.sh</code></code></pre>
+  <i>Note: press i to switch in inserting mode</i>
+  <br>
+  <img src="crontab.png" alt="crontab">
+  <li>To quit crontab editing press :wq and enter</li>
+  <li>Restart your server to make your crontab start</li>
+  </ul>
+</p>
+<li>Test  the result</li>
+<ul type="square">
+  <li>Open your web browser</li>
+  <li>paste your slave instance public address</li>
+  <img src="apache.png" alt="apache is started">
+  <i>Note the apache default page is displayed</i>
+  <li>Now add a 5000 port after your slave server public address like your_slave_server_public_address:5000</li>
+  <i>Review the flask login page application displayed</i>
+  <img src="flaskapp.png" alt="flaskapp">
+</ul>
   </ol>
 </div>
